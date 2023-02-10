@@ -260,7 +260,7 @@ const Calendar = (props) => {
           <Button type="primary" htmlType="submit" style={{ float: "right" }}>
             {toggleModal.type === "add" ? "Create Event" : "Update Event"}
           </Button>
-          {toggleModal.type == "update" && (
+          {toggleModal.type === "update" && (
             <Button
               type="primary"
               onClick={deleteEvent}
