@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 import { Modal } from "antd";
 import axios from "axios";
 import moment from "moment";
-const url = "http://localhost:8888";
-// const url = "https://calendar-weekly.netlify.app"
+// const url = "http://localhost:8888/.netlify/functions";
+// const url = "https://calendar-weekly.netlify.app/.netlify/functions"
+// const new_url = "http://localhost:3002/api/events"
+const new_url = "https://weekly-calendar.onrender.com/api/events"
 const UpcomingEventsModal = ({ showEventsModal, setShowEventsModal }) => {
   const [events, setEvents] = useState([]);
   useEffect(() => {
@@ -12,7 +14,8 @@ const UpcomingEventsModal = ({ showEventsModal, setShowEventsModal }) => {
   const fetchEvents = async () => {
     try {
       const response = await axios.get(
-        `${url}/.netlify/functions/getUpcomingEvents`
+        // `${url}/getUpcomingEvents`
+        `${new_url}/getUpcomingEvents`
       );
       console.log("upcomin events response-->", response.data);
       setEvents(response.data);
@@ -46,6 +49,7 @@ const UpcomingEventsModal = ({ showEventsModal, setShowEventsModal }) => {
         {!!events.length &&
           events.map((e) => (
             <div
+            key={e.id}
               style={{
                 backgroundColor: `${e.color}`,
                 boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.3)",

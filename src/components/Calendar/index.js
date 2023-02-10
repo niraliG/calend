@@ -17,12 +17,14 @@ import {
 import "kalend/dist/styles/index.css";
 import axios from "axios";
 import UpcomingEventsModal from "../UpcomingEventsModal";
-import { utcToIst, colors, ColorSelect } from "../../utils";
+import { utcToIst, colors, ColorSelect, istToUtc } from "../../utils";
 import dayjs from "dayjs";
 import moment from "moment";
 
-// const url = "http://localhost:8888";
-const url = "https://calendar-weekly.netlify.app"
+// const url = "http://localhost:8888/.netlify/functions";
+// const url = "https://calendar-weekly.netlify.app/.netlify/functions"
+// const new_url = "http://localhost:3002/api/events";
+const new_url = "https://weekly-calendar.onrender.com/api/events"
 function getColor() {
   return colors[Math.floor(Math.random() * colors.length - 1) + 1];
 }
@@ -51,7 +53,8 @@ const Calendar = (props) => {
   const fetchEvents = async () => {
     try {
       const response = await axios.get(
-        `${url}/.netlify/functions/getEventList`
+        // `${url}/getEventList`
+        `${new_url}/getEvents`
       );
       setEvents(response.data);
     } catch (error) {
@@ -103,7 +106,8 @@ const Calendar = (props) => {
     // setEvents((prev) => [...prev, { ...eventObj, id: num }]);
     try {
       const response = await axios.post(
-        `${url}/.netlify/functions/addEvent`,
+        // `${url}/.netlify/functions/addEvent`,
+        `${new_url}/addEvent`,
         eventObj,
         {
           headers: {
@@ -126,7 +130,8 @@ const Calendar = (props) => {
     // console.log("updating event object-->", eventObj);
     try {
       const response = await axios.put(
-        `${url}/.netlify/functions/updateEvent`,
+        // `${url}/updateEvent`,
+        `${new_url}/updateEvent`,
         eventObj,
         {
           headers: {
@@ -150,10 +155,11 @@ const Calendar = (props) => {
     // console.log("schedule event ", values);
     const eventObj = {
       summary: summary || "Summary",
-      startAt: moment(startAt.$d).format("YYYY-MM-DD HH:mm:ss"),
-      endAt: moment(endAt.$d).format("YYYY-MM-DD HH:mm:ss"),
+      startAt: moment(istToUtc(startAt.$d)).format("YYYY-MM-DD HH:mm:ss"),
+      endAt: moment(istToUtc(endAt.$d)).format("YYYY-MM-DD HH:mm:ss"),
       color: color || "seagreen",
     };
+    // console.log("after using moment", eventObj);
     if (toggleModal.type === "add") {
       addEvent(eventObj);
     } else {
@@ -165,7 +171,8 @@ const Calendar = (props) => {
     // console.log("deleting event---id", id);
     try {
       const response = await axios.delete(
-        `${url}/.netlify/functions/deleteEvent`,
+        // `${url}/deleteEvent`,
+        `${new_url}/deleteEvent`,
         { data: { id: id } },
         {
           headers: {
